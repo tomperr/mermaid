@@ -68,6 +68,7 @@ vi.mock('stylis', () => {
   };
 });
 import { compile, serialize } from 'stylis';
+import DOMPurify from 'dompurify';
 
 /**
  * @see https://vitest.dev/guide/mocking.html Mock part of a module
@@ -644,7 +645,17 @@ describe('mermaidAPI', () => {
     it('allows dompurify config to be set', () => {
       mermaidAPI.initialize({ dompurifyConfig: { ADD_ATTR: ['onclick'] } });
 
-      expect(mermaidAPI!.getConfig()!.dompurifyConfig!.ADD_ATTR).toEqual(['onclick']);
+      expect(mermaidAPI!.getConfig()!.dompurifyConfig!.ADD_ATTR).toEqual(['target', 'onclick']);
+    });
+    it('add `rel` property on link if `target` property is set', () => {
+      mermaidAPI.initialize();
+      const sanitizedText = DOMPurify.sanitize(
+        '<a href="#" target="_blank">foo</a>',
+        mermaidAPI.getConfig().dompurifyConfig!
+      );
+
+      expect(sanitizedText).toMatch(/target="_blank"/i);
+      expect(sanitizedText).toMatch(/rel="noopener"/i);
     });
   });
 

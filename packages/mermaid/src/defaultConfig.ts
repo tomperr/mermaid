@@ -253,6 +253,7 @@ const config: RequiredDeep<MermaidConfig> = {
     // TODO: can we make this default to `true` instead?
     useMaxWidth: false,
   },
+  dompurifyConfig: { ADD_ATTR: ['target'] },
 };
 
 const keyify = (obj: any, prefix = ''): string[] =>

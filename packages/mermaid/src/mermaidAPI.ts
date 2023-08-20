@@ -580,6 +580,12 @@ function initialize(options: MermaidConfig = {}) {
   const config =
     typeof options === 'object' ? configApi.setSiteConfig(options) : configApi.getSiteConfig();
 
+  DOMPurify.addHook('afterSanitizeAttributes', function (node) {
+    if ('target' in node) {
+      node.setAttribute('rel', 'noopener');
+    }
+  });
+
   setLogLevel(config.logLevel);
   addDiagrams();
 }
